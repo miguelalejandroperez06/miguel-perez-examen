@@ -2,7 +2,7 @@ import express from 'express';
 import proveedoresController from '../Controllers/proveedores.controller.js';
 
 const router = express.Router();
-
+// Rutas para la entidad Proveedores
 /* GET: Obtener todos los proveedores */
 router.get('/', async (req, res) => {
     try {
