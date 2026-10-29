@@ -10,6 +10,7 @@ import logger from 'morgan';
 //import proveedoresRouter from './routes/proveedores.routes.js';
 import proveedoresRouter from './routes/proveedores.routes.js';
 import equiposRouter from './routes/equipos.routes.js';
+import clientesRouter from './routes/clientes.routes.js';
 const app = express();
 
 // view engine setup
@@ -21,6 +22,7 @@ app.use('/api/proveedores', proveedoresRouter);
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use('/api/equipos', equiposRouter);
+app.use('/api/clientes', clientesRouter);
 //app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use('/', indexRouter);
