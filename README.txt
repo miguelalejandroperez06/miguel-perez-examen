@@ -73,3 +73,6 @@ CLIENTES:
 - PUT    /api/clientes/:id         -> Editar un cliente
 - DELETE /api/clientes/:id         -> Eliminar un cliente
 ==================================================
+
+SEGURIDAD:
+Protección contra Inyeccion SQL mediante consultas paramétrizadas en todos los modelos con MySQL
