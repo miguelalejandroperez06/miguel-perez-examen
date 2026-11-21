@@ -4,10 +4,19 @@ import { verificarToken, verificarRol } from '../middlewares/auth.middleware.js'
 
 const router = express.Router();
 
-// Rutas públicas (visibles sin login)
+// Rutas públicas
 router.get('/', async (req, res) => {
     try {
         const response = await equiposController.mostrarTodos();
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(400).json(error);
+    }
+});
+
+router.get('/proveedor/:proveedorId', async (req, res) => {
+    try {
+        const response = await equiposController.mostrarPorProveedor(req.params.proveedorId);
         res.status(200).json(response);
     } catch (error) {
         res.status(400).json(error);
@@ -23,7 +32,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Rutas protegidas por token y rol
+// Rutas protegidas
 router.post('/', verificarToken, verificarRol('admin', 'empleado'), async (req, res) => {
     try {
         const { nombre, marca, modelo, precio, stock, proveedorId } = req.body;
