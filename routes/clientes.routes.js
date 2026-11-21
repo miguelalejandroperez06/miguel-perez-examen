@@ -1,9 +1,10 @@
 import express from 'express';
 import clientesController from '../Controllers/clientes.controller.js';
+import { verificarToken, verificarRol } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', verificarToken, async (req, res) => {
     try {
         const response = await clientesController.mostrarTodos();
         res.status(200).json(response);
@@ -12,7 +13,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', verificarToken, async (req, res) => {
     try {
         const response = await clientesController.mostrarUno(req.params.id);
         res.status(200).json(response);
@@ -21,7 +22,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', verificarToken, verificarRol('admin', 'empleado'), async (req, res) => {
     try {
         const { nombre, apellido, correo, telefono } = req.body;
         const response = await clientesController.crear(nombre, apellido, correo, telefono);
@@ -31,7 +32,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', verificarToken, verificarRol('admin', 'empleado'), async (req, res) => {
     try {
         const { nombre, apellido, correo, telefono } = req.body;
         const response = await clientesController.editar(req.params.id, nombre, apellido, correo, telefono);
@@ -41,7 +42,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verificarToken, verificarRol('admin'), async (req, res) => {
     try {
         const response = await clientesController.eliminar(req.params.id);
         res.status(200).json(response);
