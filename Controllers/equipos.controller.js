@@ -41,6 +41,23 @@ class EquiposController {
         });
     }
 
+    mostrarPorProveedor(proveedorId) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const equipos = await equiposModel.porProveedor(proveedorId);
+                return resolve({
+                    data: equipos,
+                    message: "Equipos del proveedor obtenidos exitosamente"
+                });
+            } catch (error) {
+                return reject({
+                    data: null,
+                    message: "Error al obtener los equipos del proveedor"
+                });
+            }
+        });
+    }
+
     crear(nombre, marca, modelo, precio, stock, proveedorId) {
         return new Promise(async (resolve, reject) => {
             try {
@@ -52,7 +69,7 @@ class EquiposController {
                 }
                 const result = await equiposModel.crear(nombre, marca, modelo, precio, stock, proveedorId);
                 return resolve({
-                    data: { id: result.insertId, nombre, marca, modelo, precio, stock, proveedorId },
+                    data: { id: result.insertId, nombre, marca, modelo, precio, stock, proveedorId: proveedorId || null },
                     message: "Equipo creado exitosamente"
                 });
             } catch (error) {
@@ -70,7 +87,7 @@ class EquiposController {
                 if (!nombre || !marca || !modelo || precio === undefined || stock === undefined) {
                     return reject({
                         data: null,
-                        message: "Faltan datos obligatorios para actualizar el equipo"
+                        message: "Faltan datos obligatorios para actualizar"
                     });
                 }
                 const result = await equiposModel.actualizar(id, nombre, marca, modelo, precio, stock, proveedorId);
@@ -81,7 +98,7 @@ class EquiposController {
                     });
                 }
                 return resolve({
-                    data: { id, nombre, marca, modelo, precio, stock, proveedorId },
+                    data: { id, nombre, marca, modelo, precio, stock, proveedorId: proveedorId || null },
                     message: "Equipo actualizado exitosamente"
                 });
             } catch (error) {
@@ -111,23 +128,6 @@ class EquiposController {
                 return reject({
                     data: null,
                     message: "Error al eliminar el equipo"
-                });
-            }
-        });
-    }
-
-    mostrarPorProveedor(proveedorId) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const equipos = await equiposModel.porProveedor(proveedorId);
-                return resolve({
-                    data: equipos,
-                    message: "Equipos del proveedor obtenidos exitosamente"
-                });
-            } catch (error) {
-                return reject({
-                    data: null,
-                    message: "Error al obtener los equipos del proveedor"
                 });
             }
         });
