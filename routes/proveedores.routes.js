@@ -1,9 +1,10 @@
 import express from 'express';
 import proveedoresController from '../Controllers/proveedores.controller.js';
+import { verificarToken, verificarRol } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
-// Rutas para la entidad Proveedores
-/* GET: Obtener todos los proveedores */
+
+// Rutas públicas (sin login)
 router.get('/', async (req, res) => {
     try {
         const response = await proveedoresController.mostrarTodos();
@@ -13,7 +14,6 @@ router.get('/', async (req, res) => {
     }
 });
 
-/* GET: Obtener un proveedor por ID */
 router.get('/:id', async (req, res) => {
     try {
         const response = await proveedoresController.mostrarUno(req.params.id);
@@ -23,8 +23,8 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-/* POST: Crear un nuevo proveedor */
-router.post('/', async (req, res) => {
+// Rutas protegidas (solo admin)
+router.post('/', verificarToken, verificarRol('admin'), async (req, res) => {
     try {
         const { nombre, correo, telefono } = req.body;
         const response = await proveedoresController.crear(nombre, correo, telefono);
@@ -34,8 +34,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-/* PUT: Actualizar un proveedor existente */
-router.put('/:id', async (req, res) => {
+router.put('/:id', verificarToken, verificarRol('admin'), async (req, res) => {
     try {
         const { nombre, correo, telefono } = req.body;
         const response = await proveedoresController.editar(req.params.id, nombre, correo, telefono);
@@ -45,8 +44,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-/* DELETE: Eliminar un proveedor por ID */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verificarToken, verificarRol('admin'), async (req, res) => {
     try {
         const response = await proveedoresController.eliminar(req.params.id);
         res.status(200).json(response);
